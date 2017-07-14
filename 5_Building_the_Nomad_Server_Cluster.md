@@ -223,4 +223,4 @@ Restart the nomad-server service.
 
 At this point, you should have three vault-enabled Consul Server members in your cluster.  You can verify this in your Consul Web UI.
 
-You can now proceed to [build the Nomad Agents](6_Building_the_Nomad_Agents.md).
+You can now proceed to [build the Nomad Agents](6_Building_the_Nomad_Agent_Cluster.md).
