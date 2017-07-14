@@ -75,129 +75,25 @@ Run `terraform apply` to build your three nodes.
 
 ## Install Consul Agent
 
-You can perform these steps on one node at a time or on multiples at once using a tool like cssh (csshX on macOS)
-
-### Create the `consul` user
-
-```
-useradd consul
-usermod -aG wheel consul
-mkdir /home/consul/.ssh
-chown consul /home/consul/.ssh
-chmod 700 /home/consul/.ssh
-echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBsCHv5Pyco+HkIDEy/x2WQWikvZ2QBFMUtXgsezFTAyNjsvrdEWgLfK0upQdVNC3Mo20KHtTh6sUSkddlBxdt8IezsjZgUs3DekuZXCEwCeEm8caWewmNwfu4CmnZZjPHjEWMENUmdAw00y3Hn57BuudyUmoMb5ktpwdIjkSPHZHxWACo4jIdgljuOg8Z0z+xcCDzkKtAeEcZPbCyC3i2hm2p1v4GsQ2Np8CI7luM+r+sXEMSraNq5FPJRFE6cEZuTuXpVXha646IWciT8P7bGdQkU89rScB73J9YDBzVzRbnVmTe0VLI2XJ76qgubTvEeFlaJnZsN6+gLLHotRUl cvoiselle@basho.com" > /home/consul/.ssh/authorized_keys
-chown consul /home/consul/.ssh/authorized_keys
-chmod 600 /home/consul/.ssh/authorized_keys
-sudo mkdir /etc/consul.d
-sudo chown consul /etc/consul.d
-sudo mkdir -p /opt/consul/agent
-chown -R consul /opt/consul
-passwd consul
-```
-
-### Write Consul Configuration
->**Note**: If performing this step on more than one node at a time, make sure that you have the node name correct in this file.
-
-```
-cat << CONSULCONFIG | sudo tee /etc/consul.d/config-agent.json
-{
-  "retry_join": ["«consul-server-1 ip»","«consul-server-2 ip»","«consul-server-3 ip»"],
-  "client_addr": "0.0.0.0",
-  "datacenter": "dc1",
-  "data_dir": "/opt/consul/agent",
-  "log_level": "INFO",
-  "node_name": "nomad-server-1",
-  "watches": [
-  ]
-}
-CONSULCONFIG
-sudo chown consul /etc/consul.d/config-agent.json
-```
-
-### Create the systemd service defintion
-
-```
-cat << CONSULSERVICE | sudo tee /etc/systemd/system/consul-agent.service
-[Unit]
-Description=Consul Agent
-Requires=network-online.target
-After=network-online.target
-
-[Service]
-User=consul
-EnvironmentFile=-/etc/sysconfig/consul-agent
-Environment=GOMAXPROCS=2
-Restart=on-failure
-ExecStart=/usr/local/bin/consul agent $OPTIONS -config-file=/etc/consul.d/config-agent.json
-ExecReload=/bin/kill -HUP $MAINPID
-KillSignal=SIGINT
-StandardOutput=journal+console
-
-[Install]
-WantedBy=multi-user.target
-CONSULSERVICE
-```
-
-### Make firewalld rules for consul
-
-```
-sudo firewall-cmd --zone=public --permanent --add-port=8301/tcp
-sudo firewall-cmd --reload
-```
-
-
-### Enable and start the consul-agent service
-```
-sudo systemctl enable consul-agent.service
-sudo systemctl start consul-agent.service
-```
-
-### Configure DNS Forwarding for Consul
-
->**Note**: This requires Bind to be installed in the base box.
-
-```
-sudo echo 'include "/etc/named.consul.conf";' | sudo tee -a /etc/named.conf
-sudo sed -i 's/dnssec-enable yes/dnssec-enable no/g' /etc/named.conf
-sudo sed -i 's/dnssec-validation yes/dnssec-validation no/g' /etc/named.conf
-
-cat << NAMED.CONSUL | sudo tee /etc/named.consul.conf
-zone "consul" IN {
-  type forward;
-  forward only;
-  forwarders { 127.0.0.1 port 8600; };
-};
-NAMED.CONSUL
-cat << RESOLV.CONSUL | sudo tee /etc/resolv.conf
-search node.consul
-nameserver 127.0.0.1
-RESOLV.CONSUL
-
-```
+See [Appendix C - Installing Consul Agent and Configuring DNS Integration](C_Installing_Consul_Agent.md)
 
 ## Install Nomad 
 
 ### Create nomad user
 ```
 useradd nomad
-mkdir /home/nomad/.ssh
-chown nomad /home/nomad/.ssh
-chmod 700 /home/nomad/.ssh
-echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBsCHv5Pyco+HkIDEy/x2WQWikvZ2QBFMUtXgsezFTAyNjsvrdEWgLfK0upQdVNC3Mo20KHtTh6sUSkddlBxdt8IezsjZgUs3DekuZXCEwCeEm8caWewmNwfu4CmnZZjPHjEWMENUmdAw00y3Hn57BuudyUmoMb5ktpwdIjkSPHZHxWACo4jIdgljuOg8Z0z+xcCDzkKtAeEcZPbCyC3i2hm2p1v4GsQ2Np8CI7luM+r+sXEMSraNq5FPJRFE6cEZuTuXpVXha646IWciT8P7bGdQkU89rScB73J9YDBzVzRbnVmTe0VLI2XJ76qgubTvEeFlaJnZsN6+gLLHotRUl cvoiselle@basho.com" > /home/nomad/.ssh/authorized_keys
-chown consul /home/nomad/.ssh/authorized_keys
-chmod 600 /home/nomad/.ssh/authorized_keys
 sudo mkdir /etc/nomad.d
 sudo chown nomad /etc/nomad.d
-sudo mkdir -p /opt/nomad/server
+sudo mkdir -p /opt/nomad/client
 chown -R nomad /opt/nomad
 passwd nomad
 ```
 
-### Write Nomad Configuration
+### Write Nomad Server Configuration
 ```
 cat << NOMADCONFIG | sudo tee /etc/nomad.d/server.hcl
 data_dir = "/opt/nomad/server"
-
+leave_on_interrupt = true
 server {
   enabled          = true
   bootstrap_expect = 3
@@ -227,8 +123,8 @@ User=nomad
 EnvironmentFile=-/etc/sysconfig/nomad-server
 Environment=GOMAXPROCS=2
 Restart=on-failure
-ExecStart=/usr/local/bin/nomad agent -server $OPTIONS -config=/etc/nomad.d/server.hcl
-ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/usr/local/bin/nomad agent -server \$OPTIONS -config=/etc/nomad.d/server.hcl
+ExecReload=/bin/kill -HUP \$MAINPID
 KillSignal=SIGINT
 StandardOutput=journal+console
 

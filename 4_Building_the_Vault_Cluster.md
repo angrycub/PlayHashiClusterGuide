@@ -68,82 +68,8 @@ Run `terraform apply` to build your three nodes.
 
 ## Install Consul Agent
 
-You can perform these steps on one node at a time or on multiples at once using a tool like cssh (csshX on macOS)
+See [Appendix C - Installing Consul Agent and Configuring DNS Integration](C_Installing_Consul_Agent.md)
 
-### Create the `consul` user
-
-```
-useradd consul
-usermod -aG wheel consul
-mkdir /home/consul/.ssh
-chown consul /home/consul/.ssh
-chmod 700 /home/consul/.ssh
-echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBsCHv5Pyco+HkIDEy/x2WQWikvZ2QBFMUtXgsezFTAyNjsvrdEWgLfK0upQdVNC3Mo20KHtTh6sUSkddlBxdt8IezsjZgUs3DekuZXCEwCeEm8caWewmNwfu4CmnZZjPHjEWMENUmdAw00y3Hn57BuudyUmoMb5ktpwdIjkSPHZHxWACo4jIdgljuOg8Z0z+xcCDzkKtAeEcZPbCyC3i2hm2p1v4GsQ2Np8CI7luM+r+sXEMSraNq5FPJRFE6cEZuTuXpVXha646IWciT8P7bGdQkU89rScB73J9YDBzVzRbnVmTe0VLI2XJ76qgubTvEeFlaJnZsN6+gLLHotRUl cvoiselle@basho.com" > /home/consul/.ssh/authorized_keys
-chown consul /home/consul/.ssh/authorized_keys
-chmod 600 /home/consul/.ssh/authorized_keys
-sudo mkdir /etc/consul.d
-sudo chown consul /etc/consul.d
-sudo mkdir -p /opt/consul/agent
-chown -R consul /opt/consul
-passwd consul
-```
-
-### Write Consul Configuration
->**Note**: If performing this step on more than one node at a time, make sure that you have the node name correct in this file.
-
-```
-cat << CONSULCONFIG | sudo tee /etc/consul.d/config-agent.json
-{
-  "retry_join": ["«consul-server-1 ip»","«consul-server-2 ip»","«consul-server-3 ip»"],
-  "client_addr": "0.0.0.0",
-  "datacenter": "dc1",
-  "data_dir": "/opt/consul/client",
-  "log_level": "INFO",
-  "node_name": "vault-server-1",
-  "watches": [
-  ]
-}
-CONSULCONFIG
-sudo chown consul /etc/consul.d/config-agent.json
-```
-
-### Create the systemd service defintion
-
-```
-cat << CONSULSERVICE | sudo tee /etc/systemd/system/consul-agent.service
-[Unit]
-Description=Consul Agent
-Requires=network-online.target
-After=network-online.target
-
-[Service]
-User=consul
-EnvironmentFile=-/etc/sysconfig/consul-agent
-Environment=GOMAXPROCS=2
-Restart=on-failure
-ExecStart=/usr/local/bin/consul agent $OPTIONS -config-file=/etc/consul.d/config-agent.json
-ExecReload=/bin/kill -HUP $MAINPID
-KillSignal=SIGINT
-StandardOutput=journal+console
-
-[Install]
-WantedBy=multi-user.target
-CONSULSERVICE
-```
-
-### Make firewalld rules for consul
-
-```
-sudo firewall-cmd --zone=public --permanent --add-port=8301/tcp
-sudo firewall-cmd --reload
-```
-
-
-### Enable and start the consul-agent service
-```
-sudo systemctl enable consul-agent.service
-sudo systemctl start consul-agent.service
-```
 ## Install Vault 
 ### Create Vault User
 
