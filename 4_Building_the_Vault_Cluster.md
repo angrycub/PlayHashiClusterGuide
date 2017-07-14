@@ -149,7 +149,7 @@ EnvironmentFile=-/etc/sysconfig/vault
 Environment=GOMAXPROCS=2
 Restart=on-failure
 ExecStart=/usr/local/bin/vault server $OPTIONS -config=/etc/vault.d/config.hcl
-ExecReload=/bin/kill -HUP $MAINPID
+ExecReload=/bin/kill -HUP \$MAINPID
 KillSignal=SIGINT
 StandardOutput=journal+console
 

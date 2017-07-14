@@ -117,7 +117,7 @@ EnvironmentFile=-/etc/sysconfig/consul
 Environment=GOMAXPROCS=2
 Restart=on-failure
 ExecStart=/usr/local/bin/consul agent $OPTIONS -config-file=/etc/consul.d/config.json
-ExecReload=/bin/kill -HUP $MAINPID
+ExecReload=/bin/kill -HUP \$MAINPID
 KillSignal=SIGINT
 StandardOutput=journal+console
 
