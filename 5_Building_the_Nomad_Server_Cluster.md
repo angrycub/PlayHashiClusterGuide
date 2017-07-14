@@ -51,6 +51,7 @@ resource "xenserver_vm" "nomad-server-1" {
     name_label = "nomad-server-1"
     base_template_name = "centos-7-micro"
     xenstore_data {
+      hostname = "nomad-server-1.node.consul"
     }
 }
 
@@ -58,6 +59,7 @@ resource "xenserver_vm" "nomad-server-2" {
     name_label = "nomad-server-2"
     base_template_name = "centos-7-micro"
     xenstore_data {
+      hostname = "nomad-server-2.node.consul"
     }
 }
 
@@ -65,6 +67,7 @@ resource "xenserver_vm" "nomad-server-3" {
     name_label = "nomad-server-3"
     base_template_name = "centos-7-micro"
     xenstore_data {
+      hostname = "nomad-server-3.node.consul"
     }
 }
 ```

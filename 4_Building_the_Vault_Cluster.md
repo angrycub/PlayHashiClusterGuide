@@ -50,6 +50,7 @@ resource "xenserver_vm" "vault-server-1" {
     name_label = "vault-server-1"
     base_template_name = "centos-7-micro"
     xenstore_data {
+      hostname = "vault-server-1.node.consul"
     }
 }
 
@@ -57,6 +58,7 @@ resource "xenserver_vm" "vault-server-2" {
     name_label = "vault-server-2"
     base_template_name = "centos-7-micro"
     xenstore_data {
+      hostname = "vault-server-2.node.consul"
     }
 }
 
