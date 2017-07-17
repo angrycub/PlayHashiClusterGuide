@@ -11,8 +11,8 @@
 Create three templates for CentOS boxes:
 
 * centos-7-base: this machine will be used as the basis for the other instance types
-* centos-7-micro: 1 vCPU, 800MB RAM, 10GB HDD
-* centos-7-small: 2 vCPU, 1.5GB RAM, 10GB HDD
+* centos-7-micro: 1 vCPU, 800 MB RAM, 10 GB HDD
+* centos-7-small: 2 vCPU, 1.5 GB RAM, 10 GB HDD
 
 ## Creating `centos-7-base`
 
@@ -47,7 +47,7 @@ Make a copy of the centos-7-base template.  On the **Destination** page, select 
 
 For the **Name**, replace the default value with `centos-7-micro`.  Select the **Full copy** option in the Copy Mode group.  Click **Finish** to create the copy of the template.
 
-For the centos-7-micro template, we will need to manually lower the memory to 800MB via the XenServer CLI because the initial CentOS 7 template enforces a  1GB minimum at creation time.
+For the centos-7-micro template, we will need to manually lower the memory to 800 MB via the XenServer CLI because the initial CentOS 7 template enforces a  1 GB minimum at creation time.
 
 Determine the UUID of your template by selecting clicking on **Objects** in the bottom left section of the interface.
 

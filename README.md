@@ -1,6 +1,6 @@
 # Play Hashi Cluster Guide
 
-The goal of this guide is to walk through creating a play Hashistack cluster that has the feels of a production cluster, from provisioning nodes with Terraform to running a sample job on a Vault-enabled Nomad cluster.
+The goal of this guide is to walk through creating a play "Hashistack" cluster that has the feels of a production cluster, from provisioning nodes with Terraform to running a sample job on a Vault-enabled Nomad cluster.
 
 This guide will have you building:
 
