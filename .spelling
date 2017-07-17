@@ -1,0 +1,59 @@
+# markdown-spellcheck spelling configuration file
+# Format - lines beginning # are comments
+# global dictionary is at the start, file overrides afterwards
+# one word per line, to define a file override use ' - filename'
+# where filename is relative to this configuration file
+
+firewalld
+CentOS
+
+DNS
+XenServer
+systemd
+subfolder
+UUID
+XenCenter
+vCPU
+Hashi
+executables
+JQ
+https
+usr
+jq
+VM
+CLI
+UI
+csshX
+macOS
+Redis
+Ctrl-C
+README
+TCP
+ - 2_The_Base_Box.md
+centos-7-base
+centos-7-micro
+centos-7-small
+VMs
+jq-linux64
+0cd1c960-89ca-cc73-99bf-0e0fec7c140c
+terraform-xenserver
+ - 3_Building_the_Consul_Cluster.md
+terraform-xenserver-provider
+consul.tf
+cssh
+ui
+ - 4_Building_the_Vault_Cluster.md
+vault.tf
+mlock
+ - 5_Building_the_Nomad_Server_Cluster.md
+tf
+_ADDR
+ - 6_Building_the_Nomad_Agent_Cluster.md
+global-redis-check
+ - C_Installing_Consul_Agent.md
+resolv.conf
+_addr
+ - more_refinements/installing_fabio.md
+Fabio
+fabio
+fabio.nomad

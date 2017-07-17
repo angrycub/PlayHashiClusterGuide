@@ -149,13 +149,13 @@ echo "$(hostname -I) $(xenstore-read vm-data/hostname) " >> /etc/hosts
 ```
 ==> Failed to parse HTTP advertise address: No valid advertise addresses, please set `advertise` manually
 ```
-you need either add an advertise entry to the configuration or configure a hosts file entry that maps the nodes name to an IP addres.
+you need either add an advertise entry to the configuration or configure a hosts file entry that maps the nodes name to an IP address.
  
 ## Configure Vault for Nomad's Vault Integration
 
 ### Load the Vault Policy for Nomad
 
-SSH to one of the Vault machines. Start by seting up the VAULT_ADDR environment variable.
+SSH to one of the Vault machines. Start by setting up the VAULT_ADDR environment variable.
 
 ```
 export VAULT_ADDR="http://127.0.0.1:8200"

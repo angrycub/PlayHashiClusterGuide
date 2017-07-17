@@ -143,7 +143,7 @@ NOMADSRVSERVICE
 ```
 ==> Failed to parse HTTP advertise address: No valid advertise addresses, please set `advertise` manually
 ```
-you need either add an advertise entry to the configuration or configure a hosts file entry that maps the nodes name to an IP addres.
+you need either add an advertise entry to the configuration or configure a hosts file entry that maps the nodes name to an IP address.
 
 ### Install Docker for the Sample Job
 

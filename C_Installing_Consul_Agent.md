@@ -94,10 +94,10 @@ CONSULCONFIG
 sudo chown consul /etc/consul.d/config-agent.json
 ```
 
->**Note**: We have to configure bind_addr in the configuration or Consul will fail to start after docker is installed becasue it will no longer be able to determine what address to advertise.
+>**Note**: We have to configure bind_addr in the configuration or Consul will fail to start after docker is installed because it will no longer be able to determine what address to advertise.
 
 
-### Create the systemd service defintion
+### Create the systemd service definition
 
 ```
 cat << CONSULSERVICE | sudo tee /etc/systemd/system/consul-agent.service

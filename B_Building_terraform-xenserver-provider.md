@@ -2,7 +2,7 @@
 
 ### Prerequisites
 
-* A workstation of the same type as the one you will use for runing Terraform with the following:
+* A workstation of the same type as the one you will use for running Terraform with the following:
 	* Go version ??
 	* [terraform-xenserver-provider]( 
 

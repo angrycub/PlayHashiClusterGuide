@@ -105,7 +105,7 @@ CONSULCONFIG
 sudo chown consul /etc/consul.d/config.json
 ```
 
-### Create the systemd service defintion
+### Create the systemd service definition
 
 ```
 cat << CONSULSERVICE | sudo tee /etc/systemd/system/consul.service
@@ -149,6 +149,6 @@ sudo systemctl enable consul.service
 sudo systemctl start consul.service
 ```
 
-At this point, you should have an three node Consul cluster configuration.  You can verify this by going to the Consul Web UI.  It is accessible at **http://«Consul server ip»:8500/ui/**
+At this point, you should have an three node Consul cluster configuration.  You can verify this by going to the Consul Web UI.  It is accessible at **http://«Consul server IP»:8500/ui/**
 
 You can now proceed to [build the Vault cluster](4_Building_the_Vault_Cluster.md).

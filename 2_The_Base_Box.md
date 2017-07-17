@@ -65,7 +65,7 @@ Verify that you have the correct template by listing its parameters.
 xe template-param-list uuid=$myTemp
 ```
 
-Once you are certain that you are working witht he correct template, run the following commands to fix it up.
+Once you are certain that you are working with the correct template, run the following commands to fix it up.
 
 ``` 
 xe template-param-remove uuid=$myTemp param-name=other-config param-key=base_template_name
@@ -75,9 +75,9 @@ xe template-param-set uuid=$myTemp memory-static-min=838860800 memory-dynamic-mi
 ```
 ## Creating `centos-7-small`
 
-Since we aren't having to work around the CentOS 7 template's recommendations, we can use the GUI for most of the work with this template.  Create a copy of the template as above in "Creating centos-7-micro".  Set the storage name to `centos-7-small`.  Once the copy is complete, go to the template and make the following chages:
+Since we aren't having to work around the CentOS 7 template's recommendations, we can use the GUI for most of the work with this template.  Create a copy of the template as above in "Creating centos-7-micro".  Set the storage name to `centos-7-small`.  Once the copy is complete, go to the template and make the following changes:
 
-* Set the memory to 1.5 gb
+* Set the memory to 1.5 GB
 
 We will also need to make some modifications to this template to allow for it to work properly with the terraform-xenserver provider.
 
