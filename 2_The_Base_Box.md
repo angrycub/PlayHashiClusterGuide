@@ -21,7 +21,7 @@ Create three templates for CentOS boxes:
 
 ```
 yum update -y
-yum instal -y unzip wget bind bind-utils
+yum instal -y unzip wget bind bind-utils net-tools
 ```
 
 Since all of the VMs we create based on this template will be running some component of the Hashi stack, download Consul, Nomad, and Vault.  Unzip the downloads and copy the executables to `/usr/local/bin`
