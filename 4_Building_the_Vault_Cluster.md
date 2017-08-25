@@ -132,7 +132,8 @@ sudo chown vault /etc/vault.d/config.hcl
 
 ### Add the vault firewall rules
 ```
-sudo firewall-cmd --zone=public --permanent --add-port=8200/tcp
+sudo firewall-cmd --permanent --add-port=8200/tcp
+sudo firewall-cmd --permanent --add-port=8201/tcp
 sudo firewall-cmd --reload
 ```
 

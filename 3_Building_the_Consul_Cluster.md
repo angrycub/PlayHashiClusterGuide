@@ -81,6 +81,7 @@ chmod 700 /home/consul/.ssh
 echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBsCHv5Pyco+HkIDEy/x2WQWikvZ2QBFMUtXgsezFTAyNjsvrdEWgLfK0upQdVNC3Mo20KHtTh6sUSkddlBxdt8IezsjZgUs3DekuZXCEwCeEm8caWewmNwfu4CmnZZjPHjEWMENUmdAw00y3Hn57BuudyUmoMb5ktpwdIjkSPHZHxWACo4jIdgljuOg8Z0z+xcCDzkKtAeEcZPbCyC3i2hm2p1v4GsQ2Np8CI7luM+r+sXEMSraNq5FPJRFE6cEZuTuXpVXha646IWciT8P7bGdQkU89rScB73J9YDBzVzRbnVmTe0VLI2XJ76qgubTvEeFlaJnZsN6+gLLHotRUl cvoiselle@basho.com" > /home/consul/.ssh/authorized_keys
 chown consul /home/consul/.ssh/authorized_keys
 chmod 600 /home/consul/.ssh/authorized_keys
+sudo mkdir /etc/consul.d
 sudo chown consul /etc/consul.d
 sudo mkdir /opt/consul
 chown consul /opt/consul
@@ -119,7 +120,7 @@ User=consul
 EnvironmentFile=-/etc/sysconfig/consul
 Environment=GOMAXPROCS=2
 Restart=on-failure
-ExecStart=/usr/local/bin/consul agent $OPTIONS -config-file=/etc/consul.d/config.json
+ExecStart=/usr/bin/consul agent $OPTIONS -config-file=/etc/consul.d/config.json
 ExecReload=/bin/kill -HUP \$MAINPID
 KillSignal=SIGINT
 StandardOutput=journal+console

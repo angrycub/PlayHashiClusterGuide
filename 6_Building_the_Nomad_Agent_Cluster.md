@@ -90,22 +90,22 @@ See [Appendix C - Installing Consul Agent and Configuring DNS Integration](C_Ins
 useradd nomad
 sudo mkdir /etc/nomad.d
 sudo chown nomad /etc/nomad.d
-sudo mkdir -p /opt/nomad/client
+sudo mkdir -p /opt/nomad
 chown -R nomad /opt/nomad
 passwd nomad
 ```
 
 ### Write Nomad Client Configuration
 ```
-cat << NOMADCONFIG | sudo tee /etc/nomad.d/client.hcl
+cat << NOMADCONFIG | sudo tee /etc/nomad.d/nomad.hcl
 datacenter = "dc1"
-data_dir = "/opt/nomad/client"
+data_dir = "/opt/nomad"
 
 client {
   enabled = true
 }
 NOMADCONFIG
-sudo chown nomad /etc/nomad.d/client.hcl
+sudo chown nomad /etc/nomad.d/nomad.hcl
 ```
 ### Make firewalld rules for nomad
 
@@ -118,18 +118,18 @@ sudo firewall-cmd --reload
 ```
 
 ```
-cat << NOMADSRVSERVICE | sudo tee /etc/systemd/system/nomad-client.service
+cat << NOMADSRVSERVICE | sudo tee /etc/systemd/system/nomad.service
 [Unit]
-Description=Nomad Client
+Description=Nomad
 Requires=network-online.target
 After=network-online.target
 
 [Service]
-User=nomad
-EnvironmentFile=-/etc/sysconfig/nomad-client
+User=root
+EnvironmentFile=-/etc/sysconfig/nomad
 Environment=GOMAXPROCS=2
 Restart=on-failure
-ExecStart=/usr/local/bin/nomad agent \$OPTIONS -config=/etc/nomad.d/client.hcl
+ExecStart=/usr/bin/nomad agent \$OPTIONS -config=/etc/nomad.d/nomad.hcl
 ExecReload=/bin/kill -HUP \$MAINPID
 KillSignal=SIGINT
 StandardOutput=journal+console
@@ -175,8 +175,8 @@ sudo systemctl status docker
 ### Start the Nomad client service
 
 ```
-sudo systemctl enable nomad-client.service
-sudo systemctl start nomad-client.service
+sudo systemctl enable nomad.service
+sudo systemctl start nomad.service
 ```
 
 ### Create and run a sample job

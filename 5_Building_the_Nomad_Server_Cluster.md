@@ -87,22 +87,22 @@ See [Appendix C - Installing Consul Agent and Configuring DNS Integration](C_Ins
 useradd nomad
 sudo mkdir /etc/nomad.d
 sudo chown nomad /etc/nomad.d
-sudo mkdir -p /opt/nomad/client
+sudo mkdir -p /opt/nomad
 chown -R nomad /opt/nomad
 passwd nomad
 ```
 
 ### Write Nomad Server Configuration
 ```
-cat << NOMADCONFIG | sudo tee /etc/nomad.d/server.hcl
-data_dir = "/opt/nomad/server"
+cat << NOMADCONFIG | sudo tee /etc/nomad.d/nomad.hcl
+data_dir = "/opt/nomad"
 leave_on_interrupt = true
 server {
   enabled          = true
   bootstrap_expect = 3
 }
 NOMADCONFIG
-sudo chown nomad /etc/nomad.d/server.hcl
+sudo chown nomad /etc/nomad.d/nomad.hcl
 ```
 ### Make firewalld rules for nomad
 
@@ -115,7 +115,7 @@ sudo firewall-cmd --reload
 ```
 
 ```
-cat << NOMADSRVSERVICE | sudo tee /etc/systemd/system/nomad-server.service
+cat << NOMADSRVSERVICE | sudo tee /etc/systemd/system/nomad.service
 [Unit]
 Description=Nomad Server
 Requires=network-online.target
@@ -123,10 +123,10 @@ After=network-online.target
 
 [Service]
 User=nomad
-EnvironmentFile=-/etc/sysconfig/nomad-server
+EnvironmentFile=-/etc/sysconfig/nomad
 Environment=GOMAXPROCS=2
 Restart=on-failure
-ExecStart=/usr/local/bin/nomad agent -server \$OPTIONS -config=/etc/nomad.d/server.hcl
+ExecStart=/usr/bin/nomad agent -server \$OPTIONS -config=/etc/nomad.d/nomad.hcl
 ExecReload=/bin/kill -HUP \$MAINPID
 KillSignal=SIGINT
 StandardOutput=journal+console
@@ -137,8 +137,8 @@ NOMADSRVSERVICE
 ```
 
 ```
-sudo systemctl enable nomad-server.service
-sudo systemctl start nomad-server.service
+sudo systemctl enable nomad.service
+sudo systemctl start nomad.service
 ```
 
 ```

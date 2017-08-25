@@ -21,10 +21,10 @@ Create three templates for CentOS boxes:
 
 ```
 yum update -y
-yum instal -y unzip wget bind bind-utils net-tools
+yum install -y unzip wget bind bind-utils net-tools
 ```
 
-Since all of the VMs we create based on this template will be running some component of the Hashi stack, download Consul, Nomad, and Vault.  Unzip the downloads and copy the executables to `/usr/local/bin`
+Since all of the VMs we create based on this template will be running some component of the Hashi stack, download Consul, Nomad, and Vault.  Unzip the downloads and copy the executables to `/usr/bin`
 
 Install JQ on the box.  It can be downloaded from [https://stedolan.github.io/jq/download/](https://stedolan.github.io/jq/download/). Make the jq-linux64 executable and then copy it to /usr/local/bin/jq
 

@@ -9,7 +9,7 @@ You can perform these steps on one node at a time or on multiples at once using 
 
 ```
 useradd consul
-sudo mkdir /etc/consul.d
+sudo mkdir -p /etc/consul.d
 sudo chown consul /etc/consul.d
 sudo mkdir -p /opt/consul/agent
 chown -R consul /opt/consul
@@ -111,7 +111,7 @@ User=consul
 EnvironmentFile=-/etc/sysconfig/consul-agent
 Environment=GOMAXPROCS=2
 Restart=on-failure
-ExecStart=/usr/local/bin/consul agent \$OPTIONS -config-file=/etc/consul.d/config-agent.json
+ExecStart=/usr/bin/consul agent \$OPTIONS -config-file=/etc/consul.d/config-agent.json
 ExecReload=/bin/kill -HUP \$MAINPID
 KillSignal=SIGINT
 StandardOutput=journal+console
