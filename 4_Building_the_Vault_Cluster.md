@@ -92,6 +92,7 @@ chmod 600 /home/vault/.ssh/authorized_keys
 ```
 
 ### Grant ownership of vault configuration directory
+
 ```
 sudo mkdir /etc/vault.d
 sudo chown vault /etc/vault.d
@@ -100,7 +101,7 @@ sudo chown vault /etc/vault.d
 ### Create Vault run directory
 
 ```
-sudo mkdir /opt/vault
+sudo mkdir -p /opt/vault/bin
 sudo chown vault /opt/vault
 ```
 
@@ -112,15 +113,16 @@ sudo setcap cap_ipc_lock=+ep $(readlink -f $(which vault))
 
 
 ### Write Vault Configuration
+
 ```
 cat << VAULTCONFIG | sudo tee /etc/vault.d/config.hcl
 storage "consul" {
-  address = "127.0.0.1:8500"
+  address = "127.0.0.1:8500/"
   path    = "vault"
 }
 
 listener "tcp" {
-  address     = "0.0.0.0:8200"
+  address     = "0.0.0.0:8200/"
   tls_disable = 1
 }
 
@@ -188,35 +190,27 @@ Code: 400. Errors:
 
 To initialize the Vault, run the following command:
 ```
-vault init
+vault init -key-shares=1 -key-threshold=1
 ```
 
 This will initialize the vault and generate the unseal keys and the initial root token.  You will use these in the next step to unseal the vault.  Following are example values from an sample run:
 
 ```
-Unseal Key 1: UjVN1EBNzqZQKrmwFxwuB3PgBiboAOS8jby35cSeBhKY
-Unseal Key 2: cm0/44FnK3lJTffA0Smjy2gZiNiX8+z7IgcKv1E5WgU3
-Unseal Key 3: tff7U/D/8U1vUfOTa462lMRGZCftdCwktkUJOBpOOYq0
-Unseal Key 4: k6wQ41lZlc41KqAbkjbnoO6UyrneJNj/8+hhP2ZM5qq2
-Unseal Key 5: z9HwWpsm5tlMwqwfw1sGrdkhgu3HaxzHp+0S03+1724N
-Initial Root Token: 21c64ff1-a723-ecb7-b640-0ef4c87562e2
+Unseal Key 1: wu3rO+triHHq7M9rTere7mu5NOtwURf4ucQJj4CmKe8=
+Initial Root Token: a09aeab6-0fc9-bab2-b667-9226b1706ff4
 ```
 >**Note**: If you get an error that says `http: server gave HTTP response to HTTPS client`, you need to run the `export VAULT_ADDR='http://127.0.0.1:8200'` command in your session.
 
-Use any three of the 5 generated keys to unseal the vault:
+Use the generated key to unseal the vault:
 
 ```
-vault unseal UjVN1EBNzqZQKrmwFxwuB3PgBiboAOS8jby35cSeBhKY
-vault unseal cm0/44FnK3lJTffA0Smjy2gZiNiX8+z7IgcKv1E5WgU3
-vault unseal tff7U/D/8U1vUfOTa462lMRGZCftdCwktkUJOBpOOYq0
+vault unseal wu3rO+triHHq7M9rTere7mu5NOtwURf4ucQJj4CmKe8=
 ```
 Perform the unsealing steps on the second node:
 
 ```
 export VAULT_ADDR='http://127.0.0.1:8200'
-vault unseal UjVN1EBNzqZQKrmwFxwuB3PgBiboAOS8jby35cSeBhKY
-vault unseal cm0/44FnK3lJTffA0Smjy2gZiNiX8+z7IgcKv1E5WgU3
-vault unseal tff7U/D/8U1vUfOTa462lMRGZCftdCwktkUJOBpOOYq0
+vault unseal wu3rO+triHHq7M9rTere7mu5NOtwURf4ucQJj4CmKe8=
 ```
 
 At this point, you should have an active/standby HA vault configuration.  You can verify this in your Consul Web UI.

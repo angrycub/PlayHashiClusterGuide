@@ -11,7 +11,7 @@ You can perform these steps on one node at a time or on multiples at once using 
 useradd consul
 sudo mkdir -p /etc/consul.d
 sudo chown consul /etc/consul.d
-sudo mkdir -p /opt/consul/agent
+sudo mkdir -p /opt/consul/data
 chown -R consul /opt/consul
 passwd consul
 ```
@@ -84,7 +84,7 @@ cat << CONSULCONFIG | sudo tee /etc/consul.d/config-agent.json
   "bind_addr": "$HOST_IP",
   "client_addr": "0.0.0.0",
   "datacenter": "dc1",
-  "data_dir": "/opt/consul/agent",
+  "data_dir": "/opt/consul/data",
   "log_level": "INFO",
   "node_name": "$NODENAME_SHORT",
   "watches": [

@@ -90,8 +90,9 @@ See [Appendix C - Installing Consul Agent and Configuring DNS Integration](C_Ins
 useradd nomad
 sudo mkdir /etc/nomad.d
 sudo chown nomad /etc/nomad.d
-sudo mkdir -p /opt/nomad
-chown -R nomad /opt/nomad
+sudo mkdir -p /opt/nomad/data
+sudo mkdir -p /opt/nomad/bin
+chown -R nomad /opt/nomad/
 passwd nomad
 ```
 
@@ -99,7 +100,7 @@ passwd nomad
 ```
 cat << NOMADCONFIG | sudo tee /etc/nomad.d/nomad.hcl
 datacenter = "dc1"
-data_dir = "/opt/nomad"
+data_dir = "/opt/nomad/data"
 
 client {
   enabled = true

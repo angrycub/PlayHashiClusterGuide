@@ -83,7 +83,8 @@ chown consul /home/consul/.ssh/authorized_keys
 chmod 600 /home/consul/.ssh/authorized_keys
 sudo mkdir /etc/consul.d
 sudo chown consul /etc/consul.d
-sudo mkdir /opt/consul
+sudo mkdir -p /opt/consul/data
+sudo mkdir -p /opt/consul/bin
 chown consul /opt/consul
 passwd consul
 ```
@@ -93,10 +94,11 @@ passwd consul
 cat << CONSULCONFIG | sudo tee /etc/consul.d/config.json
 {
   "server": true,
+  "bootstrap_expect": 3,
   "ui": true,
   "client_addr": "0.0.0.0",
   "datacenter": "dc1",
-  "data_dir": "/opt/consul",
+  "data_dir": "/opt/consul/data",
   "log_level": "INFO",
   "node_name": "consul-server-1",
   "watches": [

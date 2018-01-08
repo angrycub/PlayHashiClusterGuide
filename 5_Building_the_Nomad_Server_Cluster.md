@@ -87,7 +87,8 @@ See [Appendix C - Installing Consul Agent and Configuring DNS Integration](C_Ins
 useradd nomad
 sudo mkdir /etc/nomad.d
 sudo chown nomad /etc/nomad.d
-sudo mkdir -p /opt/nomad
+sudo mkdir -p /opt/nomad/data
+sudo mkdir -p /opt/nomad/bin
 chown -R nomad /opt/nomad
 passwd nomad
 ```
@@ -95,7 +96,7 @@ passwd nomad
 ### Write Nomad Server Configuration
 ```
 cat << NOMADCONFIG | sudo tee /etc/nomad.d/nomad.hcl
-data_dir = "/opt/nomad"
+data_dir = "/opt/nomad/data"
 leave_on_interrupt = true
 server {
   enabled          = true
@@ -171,7 +172,7 @@ curl https://nomadproject.io/data/vault/nomad-cluster-role.json -O -s -L
 Authenticate with Vault using your root token.
 
 ```
-vault auth 21c64ff1-a723-ecb7-b640-0ef4c87562e2
+vault auth a09aeab6-0fc9-bab2-b667-9226b1706ff4
 ```
 
 Write the Nomad policy and role to vault
@@ -192,8 +193,8 @@ This will produce output similar to the following:
 ```
 Key            	Value
 ---            	-----
-token          	bfbcd47b-3cbe-6bab-051b-a4ba749670c6
-token_accessor 	97ae2dc8-5862-61c0-0851-9c86ba05034d
+token          	23c42e67-733b-bb1c-90f4-1f541f4645a1
+token_accessor 	db25be12-2084-6836-7ba1-4361038ccd3d
 token_duration 	72h0m0s
 token_renewable	true
 token_policies 	[default nomad-server]
