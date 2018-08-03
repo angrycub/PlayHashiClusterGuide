@@ -117,12 +117,12 @@ sudo setcap cap_ipc_lock=+ep $(readlink -f $(which vault))
 ```
 cat << VAULTCONFIG | sudo tee /etc/vault.d/config.hcl
 storage "consul" {
-  address = "127.0.0.1:8500/"
-  path    = "vault"
+  address = "127.0.0.1:8500"
+  path    = "/vault"
 }
 
 listener "tcp" {
-  address     = "0.0.0.0:8200/"
+  address     = "0.0.0.0:8200"
   tls_disable = 1
 }
 
@@ -153,7 +153,7 @@ User=vault
 EnvironmentFile=-/etc/sysconfig/vault
 Environment=GOMAXPROCS=2
 Restart=on-failure
-ExecStart=/usr/local/bin/vault server $OPTIONS -config=/etc/vault.d/config.hcl
+ExecStart=/usr/local/bin/vault server \OPTIONS -config=/etc/vault.d/config.hcl
 ExecReload=/bin/kill -HUP \$MAINPID
 KillSignal=SIGINT
 StandardOutput=journal+console
@@ -190,7 +190,7 @@ Code: 400. Errors:
 
 To initialize the Vault, run the following command:
 ```
-vault init -key-shares=1 -key-threshold=1
+vault init -key-shares=1 -key-threshold=1 | tee vault_info.txt
 ```
 
 This will initialize the vault and generate the unseal keys and the initial root token.  You will use these in the next step to unseal the vault.  Following are example values from an sample run:

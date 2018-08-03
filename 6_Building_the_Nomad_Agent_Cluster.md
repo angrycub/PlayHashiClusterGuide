@@ -101,6 +101,8 @@ passwd nomad
 cat << NOMADCONFIG | sudo tee /etc/nomad.d/nomad.hcl
 datacenter = "dc1"
 data_dir = "/opt/nomad/data"
+log_level = "DEBUG"
+leave_on_interrupt = true
 
 client {
   enabled = true

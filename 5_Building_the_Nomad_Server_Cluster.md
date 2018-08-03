@@ -23,7 +23,7 @@
 By the time we have completed this section, you will have a functional three node Consul cluster and be able to inspect its status via the web UI.
 
 
-## Terraform Vault nodes
+## Terraform Nomad Server nodes
 
 Create a project directory that will hold your terraform files and states.  Since I would like to be able to provision and destroy each infrastructure component individually, I have a subfolder in my project directory for Consul, Vault, and Nomad.
 
