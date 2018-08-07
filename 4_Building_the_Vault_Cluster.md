@@ -102,7 +102,7 @@ sudo chown vault /etc/vault.d
 
 ```
 sudo mkdir -p /opt/vault/bin
-sudo chown vault /opt/vault
+sudo chown -R vault /opt/vault
 ```
 
 ### Allow vault user to use mlock
@@ -118,7 +118,7 @@ sudo setcap cap_ipc_lock=+ep $(readlink -f $(which vault))
 cat << VAULTCONFIG | sudo tee /etc/vault.d/config.hcl
 storage "consul" {
   address = "127.0.0.1:8500"
-  path    = "/vault"
+  path    = "vault/"
 }
 
 listener "tcp" {
@@ -129,6 +129,7 @@ listener "tcp" {
 ui=true
 cluster_name="vault_dc1"
 VAULTCONFIG
+
 sudo chown vault /etc/vault.d/config.hcl
 ```
 
@@ -142,21 +143,21 @@ sudo firewall-cmd --reload
 ### Create Service Wrapper
 
 ```
-cat << SERVICECONFIG | sudo tee /etc/systemd/system/vault-server.service
+cat << SERVICECONFIG | sudo tee /etc/systemd/system/vault.service
 [Unit]
 Description=Vault Server
 Requires=network-online.target
 After=network-online.target
 
 [Service]
-User=vault
+User=root
 EnvironmentFile=-/etc/sysconfig/vault
 Environment=GOMAXPROCS=2
 Restart=on-failure
-ExecStart=/usr/local/bin/vault server \OPTIONS -config=/etc/vault.d/config.hcl
+ExecStart=/usr/local/bin/vault server \$OPTIONS -config=/etc/vault.d/config.hcl
 ExecReload=/bin/kill -HUP \$MAINPID
 KillSignal=SIGINT
-StandardOutput=journal+console
+StandardOutput=journal
 
 [Install]
 WantedBy=multi-user.target
@@ -166,8 +167,8 @@ SERVICECONFIG
 ### Enable and start the vault-server service
 
 ```
-sudo systemctl enable vault-server.service
-sudo systemctl start vault-server.service
+sudo systemctl enable vault.service
+sudo systemctl start vault.service
 ```
 
 ### Testing
@@ -189,8 +190,9 @@ Code: 400. Errors:
 ## Initialize and unseal the vault
 
 To initialize the Vault, run the following command:
+
 ```
-vault init -key-shares=1 -key-threshold=1 | tee vault_info.txt
+vault operator init -key-shares=1 -key-threshold=1 | tee vault_info.txt
 ```
 
 This will initialize the vault and generate the unseal keys and the initial root token.  You will use these in the next step to unseal the vault.  Following are example values from an sample run:
@@ -204,13 +206,13 @@ Initial Root Token: a09aeab6-0fc9-bab2-b667-9226b1706ff4
 Use the generated key to unseal the vault:
 
 ```
-vault unseal wu3rO+triHHq7M9rTere7mu5NOtwURf4ucQJj4CmKe8=
+vault operator unseal wu3rO+triHHq7M9rTere7mu5NOtwURf4ucQJj4CmKe8=
 ```
 Perform the unsealing steps on the second node:
 
 ```
 export VAULT_ADDR='http://127.0.0.1:8200'
-vault unseal wu3rO+triHHq7M9rTere7mu5NOtwURf4ucQJj4CmKe8=
+vault operator unseal wu3rO+triHHq7M9rTere7mu5NOtwURf4ucQJj4CmKe8=
 ```
 
 At this point, you should have an active/standby HA vault configuration.  You can verify this in your Consul Web UI.

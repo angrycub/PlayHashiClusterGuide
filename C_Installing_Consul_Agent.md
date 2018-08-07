@@ -70,8 +70,7 @@ chmod +x /usr/local/bin/jq
 ```
 
 ```
-export CONSUL_IP=«IP address of one of your consul nodes.»
-
+export CONSUL_IP=10.0.2.21
 export CONSUL_IPS=$(curl -s http://$CONSUL_IP:8500/v1/catalog/service/consul | jq --compact-output '[.[] | .Address]')
 export NODENAME_SHORT=$(xenstore-read vm-data/hostname | cut -f1 -d.)
 export HOST_IP=$(hostname -I| tr -d " ")
@@ -111,10 +110,10 @@ User=consul
 EnvironmentFile=-/etc/sysconfig/consul-agent
 Environment=GOMAXPROCS=2
 Restart=on-failure
-ExecStart=/usr/bin/consul agent \$OPTIONS -config-file=/etc/consul.d/config-agent.json
+ExecStart=/usr/local/bin/consul agent \$OPTIONS -config-file=/etc/consul.d/config-agent.json
 ExecReload=/bin/kill -HUP \$MAINPID
 KillSignal=SIGINT
-StandardOutput=journal+console
+StandardOutput=journal
 
 [Install]
 WantedBy=multi-user.target

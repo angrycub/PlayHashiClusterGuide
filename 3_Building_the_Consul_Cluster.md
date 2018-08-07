@@ -97,10 +97,11 @@ cat << CONSULCONFIG | sudo tee /etc/consul.d/config.json
   "bootstrap_expect": 3,
   "ui": true,
   "client_addr": "0.0.0.0",
+  "retry_join": ["10.0.2.21","10.0.2.22","10.0.2.23"],
   "datacenter": "dc1",
   "data_dir": "/opt/consul/data",
   "log_level": "INFO",
-  "node_name": "consul-server-1",
+  "node_name": "$(hostname -s)",
   "watches": [
   ]
 }
@@ -118,14 +119,14 @@ Requires=network-online.target
 After=network-online.target
 
 [Service]
-User=consul
+User=root
 EnvironmentFile=-/etc/sysconfig/consul
 Environment=GOMAXPROCS=2
 Restart=on-failure
-ExecStart=/usr/bin/consul agent $OPTIONS -config-file=/etc/consul.d/config.json
+ExecStart=/usr/local/bin/consul agent $OPTIONS -config-file=/etc/consul.d/config.json
 ExecReload=/bin/kill -HUP \$MAINPID
 KillSignal=SIGINT
-StandardOutput=journal+console
+StandardOutput=journal
 
 [Install]
 WantedBy=multi-user.target

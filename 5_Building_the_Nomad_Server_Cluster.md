@@ -82,17 +82,6 @@ See [Appendix C - Installing Consul Agent and Configuring DNS Integration](C_Ins
 
 ## Install Nomad 
 
-### Create nomad user
-```
-useradd nomad
-sudo mkdir /etc/nomad.d
-sudo chown nomad /etc/nomad.d
-sudo mkdir -p /opt/nomad/data
-sudo mkdir -p /opt/nomad/bin
-chown -R nomad /opt/nomad
-passwd nomad
-```
-
 ### Write Nomad Server Configuration
 ```
 cat << NOMADCONFIG | sudo tee /etc/nomad.d/nomad.hcl
@@ -103,7 +92,6 @@ server {
   bootstrap_expect = 3
 }
 NOMADCONFIG
-sudo chown nomad /etc/nomad.d/nomad.hcl
 ```
 ### Make firewalld rules for nomad
 
@@ -118,7 +106,7 @@ sudo firewall-cmd --reload
 ```
 cat << NOMADSRVSERVICE | sudo tee /etc/systemd/system/nomad.service
 [Unit]
-Description=Nomad Server
+Description=Nomad Service
 Requires=network-online.target
 After=network-online.target
 
@@ -127,10 +115,10 @@ User=nomad
 EnvironmentFile=-/etc/sysconfig/nomad
 Environment=GOMAXPROCS=2
 Restart=on-failure
-ExecStart=/usr/bin/nomad agent -server \$OPTIONS -config=/etc/nomad.d/nomad.hcl
+ExecStart=/usr/local/bin/nomad agent -server \$OPTIONS -config=/etc/nomad.d/nomad.hcl
 ExecReload=/bin/kill -HUP \$MAINPID
 KillSignal=SIGINT
-StandardOutput=journal+console
+StandardOutput=journal
 
 [Install]
 WantedBy=multi-user.target
