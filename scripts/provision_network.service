@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Network Provisioning Script
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/provision/network.sh
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target
