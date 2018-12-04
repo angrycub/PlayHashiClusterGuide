@@ -111,7 +111,7 @@ Requires=network-online.target
 After=network-online.target
 
 [Service]
-User=nomad
+User=root
 EnvironmentFile=-/etc/sysconfig/nomad
 Environment=GOMAXPROCS=2
 Restart=on-failure
